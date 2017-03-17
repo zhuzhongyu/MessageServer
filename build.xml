@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="" name="MessageServer">
+    <property environment="env"/>
+	<property name="build" value="bin"/>
+	<property name="src" value="src"/>
+    <path id="classpath">
+        <pathelement location="."/>
+        <pathelement path="${build}"/>
+    </path>
+ <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+<target name="compile" depends="init" description="compile the source " >
+    <!-- Compile the java code from srcinto{build} -->
+    <javac srcdir="${src}" target="1.7" destdir="${build}" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source">
+    	        <compilerarg value="-Xlint:unchecked"/> 
+	            <classpath refid="classpath"/>
+    </javac>
+</target>
+<target name="startServer">
+      <property name="id" value="" />
+       <java classname="coboo.MsgServer" failonerror="true" fork="yes">
+       	<arg value="${id}"/>
+        <classpath refid="classpath"/>
+       </java>
+</target>
+</project>
