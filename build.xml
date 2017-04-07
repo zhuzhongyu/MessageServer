@@ -1,31 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 <project basedir="." default="" name="MessageServer">
-    <property environment="env"/>
-	<property name="build" value="bin"/>
-	<property name="src" value="src"/>
-    <path id="classpath">
-        <pathelement location="."/>
-        <pathelement path="${build}"/>
-    </path>
- <target name="init">
-    <!-- Create the time stamp -->
-    <tstamp/>
-    <!-- Create the build directory structure used by compile -->
-    <mkdir dir="${build}"/>
-  </target>
-<target name="compile" depends="init" description="compile the source " >
-    <!-- Compile the java code from srcinto{build} -->
-    <javac srcdir="${src}" target="1.7" destdir="${build}" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source">
-    	        <compilerarg value="-Xlint:unchecked"/> 
-	            <classpath refid="classpath"/>
-    </javac>
-</target>
-<target name="startServer">
-      <property name="id" value="" />
-       <java classname="coboo.MsgServer" failonerror="true" fork="yes">
-       	<arg value="${id}"/>
-        <classpath refid="classpath"/>
-       </java>
-</target>
+	<property environment="env" />
+	<property name="build" value="bin" />
+	<property name="src" value="src" />
+	<path id="classpath">
+		<pathelement location="." />
+		<fileset dir="lib">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${build}" />
+	</path>
+	<target name="init">
+		<mkdir dir="${build}" />
+	</target>
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from srcinto{build} -->
+		<javac srcdir="${src}" target="1.7" destdir="${build}" includeAntRuntime="false" debug="true" debuglevel="lines,vars,source">
+			<compilerarg value="-Xlint:unchecked" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+	<target name="startAioDebug">
+		<property name="id" value="" />
+		<java classname="coboo.AsynchronousMsgServer" failonerror="true" fork="yes">
+			<arg value="${id}" />
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y" />
+			<classpath refid="classpath" />
+		</java>
+	</target>
+	<target name="startAio">
+		<property name="id" value="" />
+		<java classname="coboo.AsynchronousMsgServer" failonerror="true" fork="yes">
+			<arg value="${id}" />
+			<classpath refid="classpath" />
+		</java>
+	</target>
+	<target name="startMina">
+		<property name="id" value="" />
+		<java classname="coboo.MinaServer" failonerror="true" fork="yes">
+			<arg value="${id}" />
+			<classpath refid="classpath" />
+		</java>
+	</target>
+	<target name="startMinaDebug">
+			<property name="id" value="" />
+			<java classname="coboo.MinaServer" failonerror="true" fork="yes">
+				<arg value="${id}" />
+				<jvmarg value="-Xdebug" />
+				<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y" />
+				<classpath refid="classpath" />
+			</java>
+		</target>
 </project>
